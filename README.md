@@ -23,7 +23,7 @@ Por lo que dado un script en Python se solicita que se puedan ingresar las
 siguientes acciones por línea de comando y se visualicen los resultados por 
 pantalla.
 
-##Requerimientos específicos 
+#Requerimientos específicos 
 1. El script de Python se debe llamar listado_chesques.py
 2. El orden de los argumentos son los siguientes: 
 a. Nombre del archivo csv.
