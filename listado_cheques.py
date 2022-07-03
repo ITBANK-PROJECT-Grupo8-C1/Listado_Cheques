@@ -49,13 +49,13 @@ def convertirFecha(fechaDesde, fechaHasta):
     rango.append(fechaDesde, fechaHasta)
     return rango
 
-def revisarError(listado): #devuelve booleano, 1 si no hay errores, 0 si hay errores.
-    b=1
+def revisarError(listado): #devuelve booleano.
+    b=True
     for i, cheque in enumerate(listado):
         j=i+1
         while j <= len(listado) and b:
             if cheque[0] == listado[j][0]:
-                b=0
+                b=False
             else:
                 j+=1
     return b
