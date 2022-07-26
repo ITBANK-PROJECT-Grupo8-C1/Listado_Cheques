@@ -8,7 +8,7 @@ from datetime import datetime
 def obtenerListadoCompleto(lectura, dni, tipocheque, estadocheque, rango):
     lista=[]
     for linea in lectura:
-        if linea[-3] == dni and linea[-2] == tipocheque and linea[-1] == estadocheque:
+        if linea[-3] == dni and linea[-2] == tipocheque and linea[-1] == estadocheque and linea[-5] == rango[0] and linea[-4] == rango[1]:
             if rango[0] <= linea[-5] <= rango[1]:
                 lista.append(linea)
             else:
@@ -32,7 +32,7 @@ def obtenerListadoSimple(lectura, dni, tipocheque):
 def obtenerListadoSinEstado(lectura, dni, tipocheque, rango):
     lista=[]
     for linea in lectura:
-        if linea[-3] == dni and linea[-2] == tipocheque:
+        if linea[-3] == dni and linea[-2] == tipocheque and linea[-5] == rango[0] and linea[-4] == rango[1]:
             if rango[0] <= linea[-5] <= rango[1]:
                 lista.append(linea)
             else:
@@ -46,7 +46,8 @@ def convertirFecha(fechaDesde, fechaHasta):
     rango = []
     fechaDesde = int(time.mktime(datetime.datetime.strptime(fechaDesde, "%d-%m-%Y").timetuple()))
     fechaHasta = int(time.mktime(datetime.datetime.strptime(fechaHasta, "%d-%m-%Y").timetuple()))
-    rango.append(fechaDesde, fechaHasta)
+    rango.append(fechaDesde)
+    rango.append(fechaHasta)
     return rango
 
 def revisarError(listado): #devuelve booleano.
@@ -67,7 +68,7 @@ def Salida(tipodesalida, listado, dni):
     elif tipodesalida.upper() == "CSV":
         fecha_timestamp = datetime.now().strftime("%d/%m/%Y")
         file = open(dni+"_"+fecha_timestamp+".csv", "w") #abro archivo para escribir.
-        file = open("C:\Users\Usuario\Desktop\practica JS\test.csv")
+        # file = open("C:\Users\Karen\Desktop\tomi-sprint4\Listado_Cheques\test.csv")
         for cheque in listado:
             file.write(cheque[3]+","+cheque[5]+","+cheque[6]+","+cheque[7]+"\n") #escribimos cada linea del listado, con los datos pedidos.
     else:
@@ -78,13 +79,14 @@ def Salida(tipodesalida, listado, dni):
 argumentos = sys.argv
 
 #creo y leo el archivo csv
-file = open("test.csv", "r")
+archivoCSV = argumentos[1]
+file = open(archivoCSV, "r")
 lineas = csv.reader(file)
 
 #tomo datos de argumentos obligatorios.
-dni = argumentos[1]
-salida = argumentos[2]
-tipo = argumentos[3]
+dni = argumentos[2]
+salida = argumentos[3]
+tipo = argumentos[4]
 
 #*********************PUNTOS CRITICOS*********************
 
@@ -97,8 +99,8 @@ elif len(argumentos) == 4:
 
 elif len(argumentos) == 5: #verificar si es que esta el estado de cheque.
 
-    if verificarEstado(argumentos[4]): #hacer filtro por estado de cheque
-        estado = argumentos[4]
+    if verificarEstado(argumentos[5]): #hacer filtro por estado de cheque
+        estado = argumentos[5]
         listadoCheques = obtenerListadoSinFecha(lineas, dni, tipo, estado)
         Salida(salida, listadoCheques, dni)
 
@@ -110,8 +112,8 @@ elif len(argumentos) == 5: #verificar si es que esta el estado de cheque.
 
 elif len(argumentos) == 6: #todos los parametros pasados.
     estado = argumentos[4]
-    fechaDesde = int(argumentos[5][:8])
-    fechaHasta = int(argumentos[5][9:])
+    fechaDesde = int(argumentos[6][:8])
+    fechaHasta = int(argumentos[6][9:])
     #guardo variables de los args.
     listadoCheques = obtenerListadoCompleto(lineas, dni, tipo, estado, convertirFecha(fechaDesde, fechaHasta))
     # guardo el listado con los dni´s coincidentes
